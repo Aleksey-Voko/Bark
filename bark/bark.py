@@ -1,3 +1,4 @@
+import os
 from collections import OrderedDict
 
 import commands
@@ -66,6 +67,11 @@ def get_bookmark_id_for_deletion():
     return get_user_input('Enter a bookmark ID to delete')
 
 
+def clear_screen():
+    clear = 'cls' if os.name == 'nt' else 'clear'
+    os.system(clear)
+
+
 if __name__ == '__main__':
     commands.CreateBookmarksTableCommand().execute()
 
@@ -79,7 +85,9 @@ if __name__ == '__main__':
                     prep_call=get_bookmark_id_for_deletion),
         'Q': Option(QUIT, commands.QuitCommand()),
     })
+    clear_screen()
     print_options(options)
 
     chosen_option = get_option_choice(options)
+    clear_screen()
     chosen_option.choose()

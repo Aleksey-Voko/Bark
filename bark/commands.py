@@ -31,3 +31,10 @@ class ListBookmarksCommand:
 
     def execute(self):
         return db.select('bookmarks', order_by=self.order_by).fetchall()
+
+
+class DeleteBookmarkCommand:
+    @staticmethod
+    def execute(data):
+        db.delete('bookmarks', {'id': data})
+        return 'Закладка удалена!'

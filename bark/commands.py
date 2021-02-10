@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from bark.database import DatabaseManager
 
 db = DatabaseManager('bookmarks.db')
@@ -13,3 +15,11 @@ class CreateBookmarksTableCommand:
             'notes': 'text',
             'date_added': 'text not null',
         })
+
+
+class AddBookmarkCommand:
+    @staticmethod
+    def execute(data):
+        data['date_added'] = datetime.utcnow().isoformat()
+        db.add('bookmarks', data)
+        return 'Закладка добавлена!'

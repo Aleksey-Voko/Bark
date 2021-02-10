@@ -1,7 +1,7 @@
 import sys
 from datetime import datetime
 
-from bark.database import DatabaseManager
+from database import DatabaseManager
 
 db = DatabaseManager('bookmarks.db')
 

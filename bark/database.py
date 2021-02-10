@@ -43,6 +43,19 @@ class DatabaseManager:
             column_values,
         )
 
+    def delete(self, table_name, criteria):
+        placeholders = [f'{column} = ?' for column in criteria.keys()]
+        delete_criteria = ' AND '.join(placeholders)
+
+        # noinspection SqlNoDataSourceInspection
+        self._execute(
+            f'''
+            DELETE FROM {table_name}
+            WHERE {delete_criteria};
+            ''',
+            tuple(criteria.values()),
+        )
+
 
 if __name__ == '__main__':
     db_manager = DatabaseManager('data_base.db')

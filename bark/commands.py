@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 
 from bark.database import DatabaseManager
@@ -38,3 +39,9 @@ class DeleteBookmarkCommand:
     def execute(data):
         db.delete('bookmarks', {'id': data})
         return 'Закладка удалена!'
+
+
+class QuitCommand:
+    @staticmethod
+    def execute():
+        sys.exit()

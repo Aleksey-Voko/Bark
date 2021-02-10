@@ -72,9 +72,7 @@ def clear_screen():
     os.system(clear)
 
 
-if __name__ == '__main__':
-    commands.CreateBookmarksTableCommand().execute()
-
+def loop():
     options = OrderedDict({
         'A': Option(ADD_BOOKMARK, commands.AddBookmarkCommand(),
                     prep_call=get_new_bookmark_data),
@@ -91,3 +89,12 @@ if __name__ == '__main__':
     chosen_option = get_option_choice(options)
     clear_screen()
     chosen_option.choose()
+
+    _ = input('Нажмите ENTER для возврата в меню')
+
+
+if __name__ == '__main__':
+    commands.CreateBookmarksTableCommand().execute()
+
+    while True:
+        loop()

@@ -71,7 +71,3 @@ class DatabaseManager:
             query += f' ORDER BY {order_by}'
 
         return self._execute(query, tuple(criteria.values()))
-
-
-if __name__ == '__main__':
-    db_manager = DatabaseManager('data_base.db')

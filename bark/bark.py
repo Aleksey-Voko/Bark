@@ -1,5 +1,6 @@
 import os
 from collections import OrderedDict
+from pprint import pprint
 
 import commands
 
@@ -22,7 +23,7 @@ class Option:
         data = self.prep_call() if self.prep_call else None
         message = (self.command.execute(data)
                    if data else self.command.execute())
-        print(message)
+        pprint(message)
 
     def __str__(self):
         return self.name
@@ -46,6 +47,17 @@ def get_option_choice(opt):
         choice = input(f'{ACTION_OPTION}: ')
 
     return opt[choice.upper()]
+
+
+def get_github_import_options():
+    return {
+        'github_username': get_user_input('Пользовательское имя GitHub'),
+        'preserve_timestamps':
+            get_user_input(
+                'Сохранить метки времени [Д/н]',
+                required=False
+            ) in {'Д', 'д', None},
+    }
 
 
 def get_user_input(label, required=True):
@@ -82,6 +94,11 @@ def loop():
         'D': Option(DELETE_BOOKMARK, commands.DeleteBookmarkCommand(),
                     prep_call=get_bookmark_id_for_deletion),
         'Q': Option(QUIT, commands.QuitCommand()),
+        'G': Option(
+            'Импортировать звезды GitHub',
+            commands.ImportGitHubStarsCommand(),
+            prep_call=get_github_import_options
+        ),
     })
     clear_screen()
     print_options(options)

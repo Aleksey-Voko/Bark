@@ -1,4 +1,5 @@
 import sys
+from abc import abstractmethod
 from datetime import datetime
 
 import requests
@@ -8,9 +9,14 @@ from database import DatabaseManager
 db = DatabaseManager('bookmarks.db')
 
 
-class CreateBookmarksTableCommand:
-    @staticmethod
-    def execute():
+class Command:
+    @abstractmethod
+    def execute(self, data):
+        pass
+
+
+class CreateBookmarksTableCommand(Command):
+    def execute(self, data=None):
         db.create_table('bookmarks', {
             'id': 'integer primary key autoincrement',
             'title': 'text not null',
@@ -20,36 +26,33 @@ class CreateBookmarksTableCommand:
         })
 
 
-class AddBookmarkCommand:
-    @staticmethod
-    def execute(data, timestamp=None):
+class AddBookmarkCommand(Command):
+    def execute(self, data, timestamp=None):
         data['date_added'] = timestamp or datetime.utcnow().isoformat()
         db.add('bookmarks', data)
         return 'Закладка добавлена!'
 
 
-class ListBookmarksCommand:
+class ListBookmarksCommand(Command):
     def __init__(self, order_by='date_added'):
         self.order_by = order_by
 
-    def execute(self):
+    def execute(self, data=None):
         return db.select('bookmarks', order_by=self.order_by).fetchall()
 
 
-class DeleteBookmarkCommand:
-    @staticmethod
-    def execute(data):
+class DeleteBookmarkCommand(Command):
+    def execute(self, data):
         db.delete('bookmarks', {'id': data})
         return 'Закладка удалена!'
 
 
-class QuitCommand:
-    @staticmethod
-    def execute():
+class QuitCommand(Command):
+    def execute(self, data=None):
         sys.exit()
 
 
-class ImportGitHubStarsCommand:
+class ImportGitHubStarsCommand(Command):
     @staticmethod
     def _extract_bookmark_info(repo):
         return {
